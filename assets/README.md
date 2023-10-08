@@ -1,0 +1,2 @@
+# STATICS.
+Documents, images, etc
