@@ -10,6 +10,9 @@ import (
 	"igo/iternal/app/healthCheck/handler"
 	"igo/iternal/app/healthCheck/repository"
 	"igo/iternal/app/healthCheck/service"
+	handler2 "igo/iternal/app/user/handler"
+	repository2 "igo/iternal/app/user/repository"
+	service2 "igo/iternal/app/user/service"
 	"log"
 	"net/http"
 )
@@ -46,7 +49,12 @@ func loadApp() {
 	healthCheckRepository := repository.NewHealthCheckRepository(database)
 	healthCheckService := service.NewHealthCheckService(healthCheckRepository)
 	healthCheckHandler := handler.NewHealthCheckHandler(healthCheckService)
-	initServer(healthCheckHandler)
+
+	userRepository := repository2.NewUserRepository(database)
+	userService := service2.NewUserService(userRepository)
+	userListHandler := handler2.NewUserListHandler(userService)
+
+	initServer(healthCheckHandler, userListHandler)
 }
 
 func loadDB() *sqlx.DB {
@@ -67,8 +75,8 @@ func loadDB() *sqlx.DB {
 	return dataBase
 }
 
-func initServer(healthCheckHandler handler.HealthCheckHandler) {
-	globalHandler := handlerCommon.NewHandler(healthCheckHandler)
+func initServer(healthCheckHandler handler.HealthCheckHandler, userListHandler handler2.UserListHandler) {
+	globalHandler := handlerCommon.NewHandler(healthCheckHandler, userListHandler)
 	server := new(server2.Server)
 
 	if err := server.Run(viper.GetString("server.host"), viper.GetString("server.port"), globalHandler.Init()); err != nil {

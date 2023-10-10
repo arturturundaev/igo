@@ -1,15 +1,15 @@
 package service
 
 import (
+	"igo/iternal/app/common/db"
 	"igo/iternal/app/healthCheck/dto"
-	"igo/iternal/app/healthCheck/repository"
 )
 
 type HealthCheckService struct {
-	repository repository.HealthCheckRepository
+	repository db.IFaceHealthCheckRepository
 }
 
-func NewHealthCheckService(repository repository.HealthCheckRepository) HealthCheckService {
+func NewHealthCheckService(repository db.IFaceHealthCheckRepository) HealthCheckService {
 	service := HealthCheckService{
 		repository: repository,
 	}
