@@ -15,8 +15,8 @@ func NewUserService(repository db.IFUserRepository) UserService {
 	}
 }
 
-func (service UserService) GetAllUsers() []dto.UserShort {
-	users := service.repository.GetAllUsers()
+func (service UserService) GetAllUsers(page int, limit int) []dto.UserShort {
+	users := service.repository.GetAllUsers(page, limit)
 	var usersDto []dto.UserShort
 	for _, element := range users {
 		usersDto = append(usersDto, dto.UserShort{First_name: element.First_name, Second_name: element.Second_name, Middle_name: element.Middle_name})

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/jmoiron/sqlx"
 	"igo/iternal/app/user/model"
 	"log"
@@ -16,10 +17,13 @@ func NewUserRepository(db *sqlx.DB) UserRepository {
 	}
 }
 
-func (repository UserRepository) GetAllUsers() []model.User {
+func (repository UserRepository) GetAllUsers(page int, limit int) []model.User {
+	page = page - 1
+	offset := page * limit
 	var result []model.User
 
-	err := repository.db.Select(&result, "SELECT id, first_name, second_name, middle_name FROM users")
+	query := fmt.Sprintf("SELECT id, first_name, second_name, middle_name FROM users ORDER BY id DESC LIMIT %d OFFSET %d", limit, offset)
+	err := repository.db.Select(&result, query)
 
 	if err != nil {
 		log.Println("Fail get data from DB")
